@@ -1,0 +1,11 @@
+@use './variavies.scss' as *;
+
+.cabecalho{
+    background-color:$accent;
+    height: 80px;
+    padding-left: 3vh;
+
+    h1{
+        color:$backgrond;
+    }
+}

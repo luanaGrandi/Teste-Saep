@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+$backgrond: #F4F7F9;
+$primary: #1a2b3c;
+$secondary: #7c8c9a;
+$accent: #00647a;
+$button: orange;
+
+
+$text-primary: $backgrond;
+$text-backgrond: $primary;
+$front-primary: "Verdana";
+$font-size: 16px;
+
+body{
+    background-color: $secondary;
+}

@@ -1,0 +1,15 @@
+@use './variavies' as *;
+
+.main{
+    background-color: $backgrond;
+    max-width: 600px;
+    margin: 8px;
+    padding: 8px;
+    border-radius: 12px;
+
+    h2{
+        color: $accent;
+        font-size: $front-primary;
+        text-align: center;
+    }
+}
