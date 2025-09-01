@@ -8,7 +8,7 @@ class Usuario(models.Model):
         return f'{self.nome}'
 
 class Tarefas(models.Model):
-    descricao = models.TextField()
+    descricao = models.TextField(max_length=100)
     nomeSetor = models.CharField(max_length=100)
     usuario = models.ForeignKey(Usuario,  on_delete=models.SET_NULL, null=True, blank=True)
     dataCadastro = models.DateField()

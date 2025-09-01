@@ -4,7 +4,7 @@ export function BarraNavegacao (){
         <nav className="barra">
             <ul>
                 <Link to= '/cadUsuario'><li>Cadastro de usuario</li></Link>
-                <Link to= '/cadTarefas'><li>Cadastro de tareas</li></Link>
+                <Link to= '/cadTarefas'><li>Cadastro de tarefas</li></Link>
                 <Link to= '/'><li>Gerenciamento de tarefas</li></Link>
             </ul>
         </nav>
