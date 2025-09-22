@@ -14,12 +14,12 @@ class Tarefas(models.Model):
     dataCadastro = models.DateField()
 
     PRIORIDADE_CHOICES = [
-        ('B', 'Baixa'),
-        ('M', 'Media'),
-        ('A', 'Alta')
+        ('Baixa', 'Baixa'),
+        ('Média', 'Media'),
+        ('Alta', 'Alta')
 
     ]
-    prioridade = models.CharField(max_length=1, choices=PRIORIDADE_CHOICES, default='B')
+    prioridade = models.CharField(max_length=5, choices=PRIORIDADE_CHOICES, default='B')
 
     STATUS_CHOICES = [
         ('A fazer', 'A fazer'),

@@ -1,18 +1,21 @@
 @use './variavies' as *;
  
-.formularios{
 
-    max-width: 600px;  
-    margin: 20px;
-    padding: 10px;
-    background-color: $backgrond;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap:10px;
-    justify-content: center ;
-   
- 
+
+
+.formularios {
+  max-width: 600px;  
+  margin: 20px;
+  padding: 10px;
+  background-color: $backgrond;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+  justify-content: center;
+  margin-left: 35%;
+  margin-top: 5%;
+
     h2{
         text-align: center;
         margin-bottom: 2px;
@@ -60,4 +63,9 @@
         }
  
 }
- 
+.readonly {
+  background-color: $secondary;
+  color: #d6d6d6;
+  border: 1px solid #ccc;
+  cursor: not-allowed;
+}

@@ -16,7 +16,7 @@ const schemaCadTarefas = z.object({
     usuario: z.string().trim().min(1, "esolha um usuario"),
     dataCadastro: z.string()
         .regex(/^\d{4}-\d{2}-\d{2}$/, 'Informe a data no formato YYYY-MM-DD'), 
-    prioridade: z.enum(['B', 'M', 'A']).default('B'), 
+    prioridade: z.enum(['Baixa', 'Média', 'Alta']).default('Baixa'), 
     status: z.enum(['A fazer', 'Fazendo', 'Pronto']).default('A fazer'), 
 });
 
@@ -81,44 +81,45 @@ export function CadTarefas() {
             <h2>Cadastro de Tarefas</h2>
 
             <label>Descrição:</label>
-            <textarea placeholder="Descreva aqui" {...register("descricao")} onChange={handleDescricaoChange}  />
-            {errors.descricao && <p className="errors">{errors.descricao.message}</p>}
+            <textarea placeholder="Descreva aqui" {...register("descricao")} onChange={handleDescricaoChange} aria-required="true" aria-invalid={errors.descricao ? "true" : "false"} />
+            {errors.descricao && <p className="errors" role="alert">{errors.descricao.message}</p>}
 
             <label>Nome do Setor:</label>
-            <input type="text" placeholder="nome do setor" {...register("nomeSetor")} onChange={handleSetorChange} />
-            {errors.nomeSetor && <p className="errors">{errors.nomeSetor.message}</p>}
+            <input type="text" placeholder="nome do setor" {...register("nomeSetor")} onChange={handleSetorChange} aria-required="true" aria-invalid={errors.nomeSetor ? "true" : "false"} />
+            {errors.nomeSetor && <p className="errors" role="alert">{errors.nomeSetor.message}</p>}
 
             <label>Usuário:</label>
-            <select {...register("usuario")}>
+            <select {...register("usuario")} aria-required="true" aria-invalid={errors.usuario ? "true" : "false"}>
                 <option value="">Selecione um usuário</option>
                 {usuarios.map(u => (
                     <option key={u.id} value={u.id}>{u.nome}</option>
                 ))}
             </select>
-            {errors.usuario && <p className="errors">{errors.usuario.message}</p>}
+            {errors.usuario && <p className="errors" role="alert">{errors.usuario.message}</p>}
 
             <label>Data de Cadastro:</label>
-            <input type="date" {...register("dataCadastro")} />
-            {errors.dataCadastro && <p className="errors">{errors.dataCadastro.message}</p>}
+            <input type="date" placeholder="data de cadastro" {...register("dataCadastro")} aria-required="true" aria-invalid={errors.dataCadastro ? "true" : "false"} />
+            {errors.dataCadastro && <p className="errors" role="alert">{errors.dataCadastro.message}</p>}
 
             <label>Prioridade:</label>
-            <select {...register("prioridade")}>
-                <option value="B">Baixa</option>
-                <option value="M">Média</option>
-                <option value="A">Alta</option>
+            <select {...register("prioridade")} aria-required="true" aria-invalid={errors.prioridade ? "true" : "false"}>
+                <option value="Baixa">Baixa</option>
+                <option value="Média">Média</option>
+                <option value="Alta">Alta</option>
             </select>
-            {errors.prioridade && <p className="errors">{errors.prioridade.message}</p>}
+            {errors.prioridade && <p className="errors" role="alert">{errors.prioridade.message}</p>}
 
             <label>Status:</label>
-            <select {...register("status")} readonly>
+            <select {...register("status")} readOnly aria-required="true" aria-invalid={errors.status ? "true" : "false"}>
                 <option value="A fazer">A fazer</option>
                 {/* <option value="Fazendo">Fazendo</option>
                 <option value="Pronto">Pronto</option> */}
             </select>
-            {errors.status && <p className="errors">{errors.status.message}</p>}
+            {errors.status && <p className="errors" role="alert">{errors.status.message}</p>}
 
             <button type="submit">Cadastrar</button>
         </form>
+
     )
 }
 

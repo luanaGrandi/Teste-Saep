@@ -69,12 +69,12 @@ export function CadUsuario() {
             <h2>Cadastro do Usuário</h2>
 
             <label>Nome:</label>
-            <input type='text' placeholder='Jose da Silva' {...register("nome")} onChange={handleNomeChange}/>
-            {errors.nome && <p className='errors'>{errors.nome.message}</p>}
+            <input type='text' placeholder='Jose da Silva' {...register("nome")} onChange={handleNomeChange} aria-required="true" aria-invalid={errors.nome ? "true" : "false"} />
+            {errors.nome && <p className='errors' role="alert">{errors.nome.message}</p>}
 
             <label>E-mail</label>
-            <input type='email' placeholder='email@email.com' {...register("email")} onChange={handleEmailChange}/>
-            {errors.email && <p className='errors'>{errors.email.message}</p>}
+            <input type='email' placeholder='email@email.com' {...register("email")} onChange={handleEmailChange} aria-required="true" aria-invalid={errors.email ? "true" : "false"} />
+            {errors.email && <p className='errors' role="alert">{errors.email.message}</p>}
 
             <button type='submit'>Cadastrar</button>
         </form>

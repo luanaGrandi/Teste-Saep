@@ -1,0 +1,65 @@
+@use './variavies.scss' as *;
+
+.conteiner {
+  width: 100%;             // ocupa o máximo do pai, responsivo
+  max-width: 40vh;         // limite máximo
+  border: 2px solid #bcc6cf;
+  border-radius: 10px;     // bordas arredondadas
+  padding: 16px;
+  margin: 1.5vh;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    font-size: 3vh;
+    color: $accent;
+    margin-bottom: 1vh;
+  }
+
+  .lista {
+    display: flex;
+    flex-wrap: wrap;        // quebra itens se precisar
+    gap: 12px;
+    padding-top: 1vh;
+
+    dt {
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    dd {
+      margin: 0;
+      margin-right: 12px;
+    }
+  }
+
+  button {
+    margin-top: 2vh;
+    margin-right: 1vh;
+    padding: 0.5vh 1.5vh;
+    background-color: $button;
+    color: $backgrond;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.5vh;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: darken($button, 10%);
+    }
+  }
+
+  form {
+    margin-top: 2vh;
+    display: flex;
+    align-items: center;
+    gap: 1vh;
+
+    select {
+      padding: 0.3vh 0.5vh;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  }
+}
