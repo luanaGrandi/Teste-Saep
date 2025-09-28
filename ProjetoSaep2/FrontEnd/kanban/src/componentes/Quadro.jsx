@@ -2,6 +2,9 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import { Coluna } from "./Coluna";
 import {DndContext} from '@dnd-kit/core'//é o uso da biblioteca de clicar e arrastar
+import { restrictToFirstScrollableAncestor } from "@dnd-kit/modifiers"; // mantém o card dentro do quadro, 
+// mas permite mover entre colunas
+
 
 export function Quadro(){
     const [tarefas, setTarefas] = useState([]);
@@ -23,25 +26,34 @@ export function Quadro(){
             });
     },[])
 
-    // função de ouvir o evento
+     // função de ouvir o evento
     function handleDragEnd(event) {
         const { active, over } = event;
 
-        if (over && active) {
-        const tarefaId = active.id;
-        const novaColuna = over.id;
-        
-        setTarefas((prev) =>
-            prev.map((t) =>
-            t.id === tarefaId ? { ...t, status: novaColuna } : t
-            )
-        );
+        // se soltar fora de uma coluna, não faz nada
+        if (!over) return;
 
-        axios
-            .patch(`http://127.0.0.1:8000/api/tarefas/${tarefaId}/`, {
-            status: novaColuna,
-            })
-            .catch(err => console.error("Erro ao atualizar o status: ", err));
+        // crio uma lista com as colunas válidas
+        const colunasValidas = ["A fazer", "Fazendo", "Pronto"];
+
+        // se a coluna que estou soltando não for válida, não faz nada
+        if (!colunasValidas.includes(over.id)) return;
+
+        if (over && active) {
+            const tarefaId = active.id;
+            const novaColuna = over.id;
+            
+            setTarefas((prev) =>
+                prev.map((t) =>
+                    t.id === tarefaId ? { ...t, status: novaColuna } : t
+                )
+            );
+
+            axios
+                .patch(`http://127.0.0.1:8000/api/tarefas/${tarefaId}/`, {
+                    status: novaColuna,
+                })
+                .catch(err => console.error("Erro ao atualizar o status: ", err));
         }
     }
 
@@ -53,10 +65,11 @@ export function Quadro(){
 
     return(
 
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext onDragEnd={handleDragEnd}   modifiers={[restrictToFirstScrollableAncestor]} >
+           
             <main className="container"  aria-label="Quadro das tarefas">
                 <h1> Minhas Tarefas</h1>
-                <div className="colunas"  aria-label="listagem das tarefas">
+                <div className="colunas"  aria-label="listagem dos status das tarefas">
                     <Coluna id='A fazer' titulo="A fazer" tarefas={tarefasAfazer} />
                     <Coluna id='Fazendo' titulo="Fazendo" tarefas={tarefasFazendo} />
                     <Coluna id='Pronto' titulo="Pronto" tarefas={tarefasPronto} />
