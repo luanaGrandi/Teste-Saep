@@ -17,21 +17,34 @@
   }
 
   .lista {
-    display: flex;
-    flex-wrap: wrap;        // quebra itens se precisar
-    gap: 12px;
-    padding-top: 1vh;
+  display: flex;
+  flex-direction: column; 
+  gap: 1vh; 
 
+  .detalhes-tarefa {
+    display: flex;
+    gap: 12px; 
     dt {
       font-weight: 600;
-      margin-right: 4px;
     }
-
     dd {
       margin: 0;
       margin-right: 12px;
     }
   }
+
+  .detalhes-usuario {
+    display: flex;
+    gap: 8px; 
+    dt {
+      font-weight: 600;
+    }
+    dd {
+      margin: 0;
+    }
+  }
+}
+
 
   button {
     margin-top: 2vh;

@@ -54,7 +54,7 @@ export function CadUsuario() {
         //para a grande parte das interações com outra plataforma é necessário usar o try
         try {
             await axios.post("http://127.0.0.1:8000/api/usuario/", data);
-            alert('Usuario cadastro com sucesso');
+            alert('Usuário cadastrado com sucesso');
             reset();//limpo o formulario depois do cadastro
 
         //guarda os erros caso exista algum

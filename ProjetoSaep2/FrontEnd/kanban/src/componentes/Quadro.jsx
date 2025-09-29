@@ -65,16 +65,18 @@ export function Quadro(){
 
     return(
 
-        <DndContext onDragEnd={handleDragEnd}   modifiers={[restrictToFirstScrollableAncestor]} >
-           
-            <main className="container"  aria-label="Quadro das tarefas">
-                <h1> Minhas Tarefas</h1>
-                <div className="colunas"  aria-label="listagem dos status das tarefas">
+        //modifiers={[restrictToFirstScrollableAncestor]} -> deixa que o card fique apenas dentro do quadro
+        <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToFirstScrollableAncestor]}>
+            <main className="container" aria-label="Quadro das tarefas">
+                <h1>Minhas Tarefas</h1>
+
+                <section className="colunas" aria-label="Status das tarefas">
                     <Coluna id='A fazer' titulo="A fazer" tarefas={tarefasAfazer} />
                     <Coluna id='Fazendo' titulo="Fazendo" tarefas={tarefasFazendo} />
                     <Coluna id='Pronto' titulo="Pronto" tarefas={tarefasPronto} />
-                </div>
+                </section>
             </main>
+
         </DndContext>
     );
 }

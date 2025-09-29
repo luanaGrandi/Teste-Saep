@@ -63,54 +63,51 @@ export function Tarefa({ tarefa, onAtualizarStatus }) {
 
     return(
         <article className="conteiner" ref={setNodeRef} style={style}{...listeners}{...attributes}>
-            <h3 id={`tarefa-${tarefa.id}`}>{tarefa.descricao}</h3>  {/* corrigido id */}
+            <h3 id={`tarefa-${tarefa.id}`}>{tarefa.descricao}</h3> 
 
-            {/* lista de detalhes */}
-            <dl className="lista">
-                {/* titulo do detalhe */}
+            {/* lista de detalhes da tarefa */}
+           <dl className="lista">
+            <div className="detalhes-tarefa">
                 <dt>Setor:</dt>
-                {/* detalhe do detalhe */}
                 <dd>{tarefa.nomeSetor}</dd>
 
                 <dt>Prioridade:</dt>
                 <dd>{tarefa.prioridade}</dd>
+            </div>
+
+            <div className="detalhes-usuario">
+                <dt>Usuário:</dt>
+                <dd>{tarefa.usuario?.nome || "Usuário não definido"}</dd>
+            </div>
             </dl>
 
-            {/* botões */}
-            <button 
-                onClick={()=> navigate(`/editarTarefas/${tarefa.id}`)}
-                onPointerDown={(e) => e.stopPropagation()} // evita conflito com drag
-            >
-                Editar
-            </button>
-            <button 
-                onClick={()=> excluirTarefa(tarefa.id)}
-                onPointerDown={(e) => e.stopPropagation()} // evita conflito com drag
-            >
-                Excluir
-            </button>
+            {/* Botão de editar as tarefas */}
+            <button onClick={()=> navigate(`/editarTarefas/${tarefa.id}`)} onPointerDown={(e) => e.stopPropagation()} // evita conflito com drag
+            > Editar </button>
+            
+            {/* botao de excluir */}
+            <button onClick={()=> excluirTarefa(tarefa.id)} onPointerDown={(e) => e.stopPropagation()} // evita conflito com drag
+            > Excluir </button>
 
-            <form>
-                <label>Status: </label>
-                <select 
-                    id={tarefa.id} 
-                    name="status" 
-                    value={status} 
-                    onChange={(e)=> setStatus(e.target.value)}
+           <form>
+            {/* mostrar o status da tarefa */}
+                <label htmlFor={`status-${tarefa.id}`}>Status: </label>
+                <select id={`status-${tarefa.id}`} name="status" value={status} onChange={(e)=> setStatus(e.target.value)} aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-label={`Status da tarefa: ${status || "não definido"}. Abra para alterar.`}
                 >
                     <option value="">selecione</option>
                     <option value="A fazer">A fazer</option>
                     <option value="Fazendo">Fazendo</option>
                     <option value="Pronto">Pronto</option>
                 </select>
-                <button 
-                    type="button" 
-                    onClick={alterarStatus} 
-                    onPointerDown={(e) => e.stopPropagation()} // evita conflito com drag
-                >
+        
+                {/* botao para alterar o status da atividade */}
+                <button type="button" onClick={alterarStatus} onPointerDown={(e) => e.stopPropagation()}>
                     Alterar status
                 </button>
             </form>
+
         </article>
     )
 }

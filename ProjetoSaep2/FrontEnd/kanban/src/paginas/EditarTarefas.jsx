@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 
 //schema de validação de ediçaõ de tarefas
-
 const schemaEditarTarefas = z.object({
     prioridade: z.enum(['Baixa', 'Média', 'Alta'], {
         erroMap: ()=>({message: "Escolha uma prioridade"})
@@ -62,15 +61,17 @@ return (
         {tarefa ? (
             <form className="formularios" onSubmit={handleSubmit(salvarEdicao)}>
                 <h2>Editar Tarefas</h2>
+                
+                {/* ESTE CAMPO NÃO É POSSIVEL SER EDITAVEL */}
+                <label htmlFor="descricao">Descrição:</label>
+                <textarea value={tarefa.descricao} id="descricao" placeholder="descrição da tarefa" readOnly className="readonly" aria-readonly="true" />
 
-                <label>Descrição:</label>
-                <textarea value={tarefa.descricao} placeholder="descrição da tarefa" readOnly className="readonly" aria-readonly="true" />
+                {/* ESTE CAMPO NÃO É POSSIVEL SER EDITAVEL */}
+                <label htmlFor="setor">Setor: </label>
+                <input type="text" value={tarefa.nomeSetor} id="nomeSetor" placeholder="nome do setor" readOnly className="readonly" aria-readonly="true" />
 
-                <label>Setor: </label>
-                <input type="text" value={tarefa.nomeSetor} placeholder="nome do setor" readOnly className="readonly" aria-readonly="true" />
-
-                <label>Prioridade:</label>
-                <select {...register('prioridade')} aria-required="true" aria-invalid={errors.prioridade ? "true" : "false"}>
+                <label htmlFor="Prioridade">Prioridade:</label>
+                <select id="Prioridade" {...register('prioridade')} aria-required="true" aria-invalid={errors.prioridade ? "true" : "false"}>
                     <option value="">Selecionar: </option>
                     <option value="Baixa">Baixa</option>
                     <option value="Média">Média</option>
@@ -78,8 +79,8 @@ return (
                 </select>
                 {errors.prioridade && <p role="alert">{errors.prioridade.message}</p>}
 
-                <label>Status:</label>
-                <select {...register('status')} aria-required="true" aria-invalid={errors.status ? "true" : "false"}>
+                <label htmlFor="Status">Status:</label>
+                <select id="Status" {...register('status')} aria-required="true" aria-invalid={errors.status ? "true" : "false"}>
                     <option value="A fazer">A fazer</option>
                     <option value="Fazendo">Fazendo</option>
                     <option value="Pronto">Pronto</option>

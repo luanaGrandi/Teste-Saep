@@ -4,6 +4,17 @@ import { z } from 'zod'; // zod é uma descrição de como eu validar, quais ser
 import { zodResolver } from '@hookform/resolvers/zod'; // é o que liga o hook form com o zod
 import axios from 'axios'; // é o hook que faz a comunicação com a internet(http)
 
+
+// Pegamos a data de hoje no formato "YYYY-MM-DD"
+const hojeStr = new Date().toISOString().split("T")[0]; 
+
+// Calculamos a data máxima permitida: 1 ano à frente da data de hoje
+const umAnoFuturoStr = new Date(
+  new Date().setFullYear(new Date().getFullYear() + 1)
+)
+  .toISOString()
+  .split("T")[0];
+
 //validação de formulário -- estou usando as regras do zod, que pode ser consultada na web
 const schemaCadTarefas = z.object({
     descricao: z.string()
@@ -13,9 +24,13 @@ const schemaCadTarefas = z.object({
         .min(4, 'Insira ao menos 4 caracteres')
         .max(100, 'Insira até 100 caracteres')
         .regex(/^[^0-9]*$/, 'Informe o nome sem caracteres numericos'),
-    usuario: z.string().trim().min(1, "esolha um usuario"),
+    usuario: z.string().trim().min(1, "Esolha um usuario"),
     dataCadastro: z.string()
-        .regex(/^\d{4}-\d{2}-\d{2}$/, 'Informe a data no formato YYYY-MM-DD'), 
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Informe a data no formato YYYY-MM-DD') // garante formato YYYY-MM-DD
+    .refine((dateStr) => dateStr >= hojeStr && dateStr <= umAnoFuturoStr, {
+      // compara como string, funciona porque YYYY-MM-DD mantém ordem cronológica
+      message: `A data deve ser entre hoje (${hojeStr}) e 1 ano à frente (${umAnoFuturoStr})`, // mensagem de erro
+    }),
     prioridade: z.enum(['Baixa', 'Média', 'Alta']).default('Baixa'), 
     status: z.enum(['A fazer', 'Fazendo', 'Pronto']).default('A fazer'), 
 });
@@ -66,12 +81,12 @@ export function CadTarefas() {
         // para a grande parte das interações com outra plataforma é necessário usar o try
         try {
             await axios.post("http://127.0.0.1:8000/api/tarefas/", data);
-            alert('tarefas cadastradas com sucesso');
+            alert('Tarefa cadastrada com sucesso');
             reset(); // limpo o formulário depois do cadastro
 
         // guarda os erros caso exista algum
         } catch (error) {
-            alert("Não deu certo o seu cadastro!!")
+            alert("Não deu certo o cadastro!!")
             console.log("erros", error)
         }
     }
@@ -80,16 +95,19 @@ export function CadTarefas() {
         <form className="formularios" onSubmit={handleSubmit(obterdados)}>
             <h2>Cadastro de Tarefas</h2>
 
-            <label>Descrição:</label>
-            <textarea placeholder="Descreva aqui" {...register("descricao")} onChange={handleDescricaoChange} aria-required="true" aria-invalid={errors.descricao ? "true" : "false"} />
+            {/* CAMPO DE DESCRIÇÃO */}
+            <label htmlFor="descricao">Descrição:</label>
+            <textarea id="descricao" placeholder="Descreva aqui" {...register("descricao")} onChange={handleDescricaoChange} aria-required="true" aria-invalid={errors.descricao ? "true" : "false"} />
             {errors.descricao && <p className="errors" role="alert">{errors.descricao.message}</p>}
 
-            <label>Nome do Setor:</label>
-            <input type="text" placeholder="nome do setor" {...register("nomeSetor")} onChange={handleSetorChange} aria-required="true" aria-invalid={errors.nomeSetor ? "true" : "false"} />
+            {/* CAMPO DO NOME DO SETOR */}
+            <label htmlFor="nomeSetor">Nome do Setor:</label>
+            <input type="text" id="nomeSetor" placeholder="nome do setor" {...register("nomeSetor")} onChange={handleSetorChange} aria-required="true" aria-invalid={errors.nomeSetor ? "true" : "false"} />
             {errors.nomeSetor && <p className="errors" role="alert">{errors.nomeSetor.message}</p>}
 
-            <label>Usuário:</label>
-            <select {...register("usuario")} aria-required="true" aria-invalid={errors.usuario ? "true" : "false"}>
+            {/* CAMPO DE ESCOLHER USUARIOS JA CADASTRADOS */}
+            <label htmlFor="usuario">Usuário:</label>
+            <select id="usuario" {...register("usuario")} aria-required="true" aria-invalid={errors.usuario ? "true" : "false"}>
                 <option value="">Selecione um usuário</option>
                 {usuarios.map(u => (
                     <option key={u.id} value={u.id}>{u.nome}</option>
@@ -97,20 +115,23 @@ export function CadTarefas() {
             </select>
             {errors.usuario && <p className="errors" role="alert">{errors.usuario.message}</p>}
 
-            <label>Data de Cadastro:</label>
-            <input type="date" placeholder="data de cadastro" {...register("dataCadastro")} aria-required="true" aria-invalid={errors.dataCadastro ? "true" : "false"} />
+            {/* DATA DE CADASTRO */}
+            <label htmlFor="dataCadastro">Data de Cadastro:</label>
+            <input type="date" id="dataCadastro" placeholder="data de cadastro" {...register("dataCadastro")} aria-required="true" aria-invalid={errors.dataCadastro ? "true" : "false"} />
             {errors.dataCadastro && <p className="errors" role="alert">{errors.dataCadastro.message}</p>}
-
-            <label>Prioridade:</label>
-            <select {...register("prioridade")} aria-required="true" aria-invalid={errors.prioridade ? "true" : "false"}>
+            
+            {/* CAMPO DE ESCOLHA DE PRIORIDADES */}
+            <label htmlFor="prioridade">Prioridade:</label>
+            <select id="prioridade" {...register("prioridade")} aria-required="true" aria-invalid={errors.prioridade ? "true" : "false"}>
                 <option value="Baixa">Baixa</option>
                 <option value="Média">Média</option>
                 <option value="Alta">Alta</option>
             </select>
             {errors.prioridade && <p className="errors" role="alert">{errors.prioridade.message}</p>}
 
-            <label>Status:</label>
-            <select {...register("status")} readOnly aria-required="true" aria-invalid={errors.status ? "true" : "false"}>
+            {/* CAMPO DE ESCOLHA DE STATUS */}
+            <label htmlFor="status">Status:</label>
+            <select id="status" {...register("status")} readOnly aria-required="true" aria-invalid={errors.status ? "true" : "false"}>
                 <option value="A fazer">A fazer</option>
                 {/* <option value="Fazendo">Fazendo</option>
                 <option value="Pronto">Pronto</option> */}
@@ -119,6 +140,7 @@ export function CadTarefas() {
 
             <button type="submit">Cadastrar</button>
         </form>
+
 
     )
 }
