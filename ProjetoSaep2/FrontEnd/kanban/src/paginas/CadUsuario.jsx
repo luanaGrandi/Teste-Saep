@@ -16,7 +16,7 @@ const schemaCadUsuario = z.object({
     email: z.string()
         .min(1, 'Insira seu email')
         .max(30, 'Insira um endereço de email com até 30 carateres')
-        .email("Formato de email invalido")
+        .email("Formato de email inválido")
         .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             "Formato de email inválido"),
 })
@@ -24,12 +24,7 @@ const schemaCadUsuario = z.object({
 
 export function CadUsuario() {
 
-    const {
-        register, //registra paras mim  o que o usuario faz
-        handleSubmit, // no momento em que ele der um submit (botão)
-        formState: { errors }, // no formulario, se der ruim guarda os erros na variavel errors
-        reset
-    } = useForm({
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
         resolver: zodResolver(schemaCadUsuario)
     });
 
@@ -39,7 +34,7 @@ export function CadUsuario() {
         valor = valor.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ ]+/g, ""); // só letras e espaço
         valor = valor.replace(/\s{2,}/g, " "); // evita espaços duplos
         if (valor.length > 30) valor = valor.slice(0, 30); // máximo 30 chars
-        setValue("name", valor);
+        setValue("nome", valor); // corrigido: era "name"
     };
 
     // Tratamento para o campo email
@@ -65,7 +60,7 @@ export function CadUsuario() {
     }
 
      return (
-        <form className="formularios" onSubmit={handleSubmit(obterdados)}>
+        <form className="formularios" role="form" onSubmit={handleSubmit(obterdados)}>
             <h2>Cadastro do Usuário</h2>
 
             <label htmlFor='nome'>Nome:</label>

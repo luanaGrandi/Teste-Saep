@@ -8,6 +8,7 @@ import axios from 'axios'; // é o hook que faz a comunicação com a internet(h
 // Pegamos a data de hoje no formato "YYYY-MM-DD"
 const hojeStr = new Date().toISOString().split("T")[0]; 
 
+
 // Calculamos a data máxima permitida: 1 ano à frente da data de hoje
 const umAnoFuturoStr = new Date(
   new Date().setFullYear(new Date().getFullYear() + 1)
@@ -36,8 +37,7 @@ const schemaCadTarefas = z.object({
 });
 
 export function CadTarefas() {
-
-   
+    const [mensagemSucesso, setMensagemSucesso] = useState("");
     const [usuarios, setUsuarios] = useState([]); // guarda os usuarios buscados do backend
 
     const {
@@ -48,6 +48,7 @@ export function CadTarefas() {
         setValue // permite alterar valores do formulário manualmente
     } = useForm({
         resolver: zodResolver(schemaCadTarefas),
+        mode: 'onSubmit', // força validação apenas ao clicar no submit
         defaultValues:{
             status: 'A fazer',
         },
@@ -65,7 +66,7 @@ export function CadTarefas() {
     const handleDescricaoChange = (e) => {
         let valor = e.target.value;
         valor = valor.replace(/\s{2,}/g, ' '); // serve para remover espacos duplos
-        setValue('descricao', valor); // atualiza o valor do input no form
+        setValue("descricao", valor, { shouldValidate: true }); // atualiza o valor do input no form
     }
 
     // Buscar usuários do backend
@@ -81,7 +82,7 @@ export function CadTarefas() {
         // para a grande parte das interações com outra plataforma é necessário usar o try
         try {
             await axios.post("http://127.0.0.1:8000/api/tarefas/", data);
-            alert('Tarefa cadastrada com sucesso');
+            setMensagemSucesso("Tarefa cadastrada com sucesso");
             reset(); // limpo o formulário depois do cadastro
 
         // guarda os erros caso exista algum
@@ -102,7 +103,7 @@ export function CadTarefas() {
 
             {/* CAMPO DO NOME DO SETOR */}
             <label htmlFor="nomeSetor">Nome do Setor:</label>
-            <input type="text" id="nomeSetor" placeholder="nome do setor" {...register("nomeSetor")} onChange={handleSetorChange} aria-required="true" aria-invalid={errors.nomeSetor ? "true" : "false"} />
+            <input type="text" id="nomeSetor" placeholder="Nome do Setor" {...register("nomeSetor")} onChange={handleSetorChange} aria-required="true" aria-invalid={errors.nomeSetor ? "true" : "false"} />
             {errors.nomeSetor && <p className="errors" role="alert">{errors.nomeSetor.message}</p>}
 
             {/* CAMPO DE ESCOLHER USUARIOS JA CADASTRADOS */}
@@ -139,6 +140,7 @@ export function CadTarefas() {
             {errors.status && <p className="errors" role="alert">{errors.status.message}</p>}
 
             <button type="submit">Cadastrar</button>
+            {mensagemSucesso && <p role="alert">{mensagemSucesso}</p>}
         </form>
 
 
