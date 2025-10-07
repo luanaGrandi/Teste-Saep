@@ -3,6 +3,8 @@ import '@testing-library/jest-dom';
 import { describe, it, expect, vi } from "vitest";
 import { CadTarefas } from "../paginas/CadTarefas";
 import axios from "axios";
+import { act } from 'react-dom/test-utils';
+import userEvent from '@testing-library/user-event';
 
 // mock do axios para evitar chamadas reais à API
 vi.mock("axios");
@@ -328,35 +330,58 @@ describe("Cadastro de Tarefas", () => {
 
     //MENSAGEM DE SUCESSO APÓS CADASTRO
    it("deve mostrar mensagem de sucesso após cadastro bem-sucedido", async () => {
+      render(<CadTarefas />);
+
+      axios.post.mockResolvedValueOnce({ data: {} });
+
+      const descricaoInput = screen.getByLabelText(/Descrição/i);
+      const nomeSetorInput = screen.getByLabelText(/Nome do Setor/i);
+      const usuarioSelect = await screen.findByLabelText(/Usuário/i);
+      const dataInput = screen.getByLabelText(/Data de Cadastro/i);
+
+      fireEvent.change(descricaoInput, { target: { value: "Descrição válida da tarefa" } });
+      fireEvent.change(nomeSetorInput, { target: { value: "TI Setor" } });
+      fireEvent.change(usuarioSelect, { target: { value: "1" } });
+      fireEvent.change(dataInput, { target: { value: "2025-10-07" } });  // Corrigido aqui
+
+      const botao = screen.getByRole("button", { name: /Cadastrar/i });
+
+      await act(async () => {
+          userEvent.click(botao);
+      });
+
+      await waitFor(() => {
+          expect(screen.getByText(/Tarefa cadastrada com sucesso/i)).toBeInTheDocument();
+      });
+  });
+
+    //PERMITIR LETRAS COM ACENTO E ESPÇAOS SIMPLES NO NOME SETOR
+    it("deve permitir letras com acento e espaços simples no campo Nome do Setor", async () => {
     render(<CadTarefas />);
+    const setorInput = screen.getByPlaceholderText("Nome do Setor");
 
-    // Mock do axios.post para simular sucesso
-    axios.post.mockResolvedValueOnce({ data: {} });
-
-    const descricaoInput = screen.getByLabelText(/Descrição/i);
-    const nomeSetorInput = screen.getByLabelText(/Nome do Setor/i);
-    const usuarioSelect = await screen.findByLabelText(/Usuário/i);
-    const dataInput = screen.getByLabelText(/Data de Cadastro/i);
-
-    // Preenche os campos com valores válidos
-    fireEvent.change(descricaoInput, { target: { value: "Descrição válida da tarefa" } });
-    fireEvent.change(nomeSetorInput, { target: { value: "TI Setor" } }); // mínimo 4 caracteres
-    fireEvent.change(usuarioSelect, { target: { value: "1" } });
-    fireEvent.change(dataInput, { target: { value: "2025-10-06" } });
-
-    const botao = screen.getByRole("button", { name: /Cadastrar/i });
-    fireEvent.click(botao);
-
-    // Espera o DOM atualizar com a mensagem de sucesso
-    await waitFor(() => {
-        expect(screen.getByText(/Tarefa cadastrada com sucesso/i)).toBeInTheDocument();
+    fireEvent.change(setorInput, {
+      target: { value: "Administração Pública" },
     });
-});
 
+    await waitFor(() => {
+      expect(setorInput.value).toBe("Administração Pública");
+    });
+  });
 
+  it("deve aceitar apenas valores válidos no campo Prioridade", async () => {
+    render(<CadTarefas />);
+    const prioridadeInput = screen.getByLabelText(/Prioridade/i);
 
+    fireEvent.change(prioridadeInput, { target: { value: "Muito alta" } });
 
+    await waitFor(() => {
+      expect(prioridadeInput.value).not.toBe("Muito alta");
+      expect(["", "Baixa", "Média", "Alta"]).toContain(prioridadeInput.value);
+    });
+  });
 
+  
     //RESETAR OS CAMPOS APOS A SUBMISSAO
   it("deve resetar os campos após submissão bem-sucedida", async () => {
     render(<CadTarefas />);

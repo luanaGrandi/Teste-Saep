@@ -17,8 +17,7 @@ const schemaCadUsuario = z.object({
         .min(1, 'Insira seu email')
         .max(30, 'Insira um endereço de email com até 30 carateres')
         .email("Formato de email inválido")
-        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            "Formato de email inválido"),
+        
 })
 
 
@@ -34,14 +33,14 @@ export function CadUsuario() {
         valor = valor.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ ]+/g, ""); // só letras e espaço
         valor = valor.replace(/\s{2,}/g, " "); // evita espaços duplos
         if (valor.length > 30) valor = valor.slice(0, 30); // máximo 30 chars
-        setValue("nome", valor); // corrigido: era "name"
+         setValue("nome", valor, { shouldValidate: true }); 
     };
 
     // Tratamento para o campo email
     const handleEmailChange = (e) => {
         let valor = e.target.value.trim();
         if (valor.length > 50) valor = valor.slice(0, 50); // máximo 50 chars
-        setValue("email", valor);
+        setValue("email", valor, { shouldValidate: true });
     };
 
     async function obterdados(data) {
